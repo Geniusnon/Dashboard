@@ -2,36 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LCB1 Safety Project Progress Dashboard</title>
+    <title>LCB1 Safety Project Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; color: #333; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1a3a5f; margin-bottom: 30px; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; padding: 20px; color: #1e293b; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #0f172a; margin-bottom: 25px; font-weight: 700; }
         
-        /* Summary Cards */
-        .summary-cards { display: flex; justify-content: space-around; margin-bottom: 30px; gap: 20px; }
-        .card { flex: 1; padding: 20px; border-radius: 10px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .bg-total { background: #34495e; }
-        .bg-progress { background: #27ae60; }
+        /* Dashboard Summary Cards */
+        .summary-cards { display: flex; justify-content: space-around; margin-bottom: 25px; gap: 20px; }
+        .card { flex: 1; padding: 25px; border-radius: 16px; text-align: center; color: white; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .bg-total { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        .bg-progress { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .card h3 { margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; }
+        .card h2 { margin: 10px 0 0; font-size: 2.5rem; font-weight: 800; }
+
+        /* KPI Monitoring Section - New Improved Design */
+        .kpi-section { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; margin-bottom: 35px; }
+        .kpi-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; color: #475569; display: flex; align-items: center; gap: 10px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         
-        .charts-row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px; }
-        .chart-box { flex: 1; min-width: 300px; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 10px; }
+        .kpi-box { padding: 20px; border-radius: 12px; background: #f1f5f9; border: 1px solid transparent; text-align: center; }
+        .kpi-box.alert { background: #fff1f2; border-color: #fecdd3; }
+        .kpi-box.success { background: #ecfdf5; border-color: #d1fae5; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
-        th { background-color: #1a3a5f; color: white; }
+        .kpi-label { font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 8px; }
+        .kpi-val { font-size: 1.5rem; font-weight: 700; display: block; }
         
-        /* Status Colors */
-        .status-done { background-color: #d4edda; color: #155724; font-weight: bold; border-radius: 5px; padding: 4px 8px; }
-        .status-doing { background-color: #fff3cd; color: #856404; font-weight: bold; border-radius: 5px; padding: 4px 8px; }
-        .status-pending { background-color: #d1ecf1; color: #0c5460; font-weight: bold; border-radius: 5px; padding: 4px 8px; }
+        /* Specific Colors */
+        .txt-danger { color: #be123c; }
+        .txt-success { color: #059669; }
+        .txt-dark { color: #1e293b; }
+
+        /* Charts & Table */
+        .charts-row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 35px; }
+        .chart-box { flex: 1; min-width: 300px; background: #fff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 12px; overflow: hidden; }
+        th { background-color: #f8fafc; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; padding: 15px; border-bottom: 2px solid #e2e8f0; text-align: left; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+        tr:hover { background-color: #f8fafc; }
+        
+        .status-badge { font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; }
+        .status-done { background: #d1fae5; color: #065f46; }
+        .status-doing { background: #fef3c7; color: #92400e; }
+        .status-pending { background: #e0f2fe; color: #075985; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📊 PS:External truck driver exited the cabin in a prohibited area</h1>
+    <h1>📊 PS:External truck driver exited the cabin in a prohibited area </h1>
 
     <div class="summary-cards">
         <div class="card bg-total">
@@ -39,8 +61,30 @@
             <h2 id="totalTasks">9</h2>
         </div>
         <div class="card bg-progress">
-            <h3>Overall Progress</h3>
+            <h3>Project Completion</h3>
             <h2 id="overallPercent">0%</h2>
+        </div>
+    </div>
+
+    <div class="kpi-section">
+        <div class="kpi-title">🔍 Safety Performance Monitoring (KPI)</div>
+        <div class="kpi-grid">
+            <div class="kpi-box alert">
+                <span class="kpi-label">Risk Trend</span>
+                <span class="kpi-val txt-danger">📈 Increasing</span>
+            </div>
+            <div class="kpi-box">
+                <span class="kpi-label">Actual Observations</span>
+                <span class="kpi-val txt-dark">≥ 1 Case</span>
+            </div>
+            <div class="kpi-box success">
+                <span class="kpi-label">Safety Standard (Goal)</span>
+                <span class="kpi-val txt-success">0 Case</span>
+            </div>
+            <div class="kpi-box alert">
+                <span class="kpi-label">Gap to Goal</span>
+                <span class="kpi-val txt-danger">≥ 1 Case</span>
+            </div>
         </div>
     </div>
 
@@ -53,15 +97,15 @@
         </div>
     </div>
 
-    <h3>📋 Action List Details</h3>
+    <h2 style="color: #1e293b; margin-top: 20px;">📋 Detailed Action Plan</h2>
     <table id="actionTable">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Action Description</th>
-                <th>Person in Charge (PIC)</th>
+                <th>PIC</th>
                 <th>Status</th>
-                <th>Completion (%)</th>
+                <th>Progress</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -69,7 +113,6 @@
 </div>
 
 <script>
-    // Task data updated to English
     const tasks = [
         { id: 1, action: "Review current practices", pic: "Kritsada", status: "Done", percent: 100 },
         { id: 2, action: "Conduct Gemba observation", pic: "Kaittisak", status: "Done", percent: 100 },
@@ -82,27 +125,23 @@
         { id: 9, action: "Install intelligent AI box", pic: "Weeraphon", status: "Pending", percent: 0 }
     ];
 
-    // Calculate Total Progress Percentage
-    const totalPercent = (tasks.reduce((sum, item) => sum + item.percent, 0) / (tasks.length * 100) * 100).toFixed(1);
-    document.getElementById('overallPercent').innerText = totalPercent + "%";
+    document.getElementById('overallPercent').innerText = (tasks.reduce((sum, item) => sum + item.percent, 0) / (tasks.length * 100) * 100).toFixed(1) + "%";
     document.getElementById('totalTasks').innerText = tasks.length;
 
-    // Populate Table
     const tableBody = document.querySelector('#actionTable tbody');
     tasks.forEach(item => {
+        let statusBadge = item.status === "Done" ? "status-done" : item.status === "In Progress" ? "status-doing" : "status-pending";
         let statusText = item.status === "Done" ? "Completed" : item.status === "In Progress" ? "In Progress" : "Pending";
-        let statusClass = item.status === "Done" ? "status-done" : item.status === "In Progress" ? "status-doing" : "status-pending";
         
         tableBody.innerHTML += `<tr>
             <td>${item.id}</td>
             <td>${item.action}</td>
             <td>${item.pic}</td>
-            <td><span class="${statusClass}">${statusText}</span></td>
+            <td><span class="status-badge ${statusBadge}">${statusText}</span></td>
             <td><b>${item.percent}%</b></td>
         </tr>`;
     });
 
-    // Chart: Status Distribution
     const statusCounts = { Done: 2, InProgress: 1, Pending: 6 };
     new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
@@ -110,33 +149,25 @@
             labels: ['Completed', 'In Progress', 'Pending'],
             datasets: [{
                 data: [statusCounts.Done, statusCounts.InProgress, statusCounts.Pending],
-                backgroundColor: ['#28a745', '#ffc107', '#17a2b8']
+                backgroundColor: ['#059669', '#f59e0b', '#3b82f6'],
+                borderWidth: 0
             }]
         },
-        options: { 
-            plugins: { 
-                title: { display: true, text: 'Overall Status Distribution' } 
-            } 
-        }
+        options: { cutout: '70%', plugins: { title: { display: true, text: 'Status Summary' } } }
     });
 
-    // Chart: Progress by Person in Charge
     new Chart(document.getElementById('progressByPicChart'), {
         type: 'bar',
         data: {
             labels: ['Kritsada', 'Kaittisak', 'Patipan', 'Weeraphon'],
             datasets: [{
-                label: 'Avg. Completion %',
+                label: 'Completion %',
                 data: [100, 50, 25, 0], 
-                backgroundColor: '#3498db'
+                backgroundColor: '#3b82f6',
+                borderRadius: 8
             }]
         },
-        options: { 
-            scales: { y: { beginAtZero: true, max: 100 } },
-            plugins: { 
-                title: { display: true, text: 'Individual Progress (%)' } 
-            }
-        }
+        options: { scales: { y: { beginAtZero: true, max: 100 } }, plugins: { title: { display: true, text: 'Progress by PIC' } } }
     });
 </script>
 
