@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LCB1 Safety Project Progress</title>
+    <title>LCB1 Safety Project Progress Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f0f2f5; padding: 20px; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; color: #333; }
         .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #1a3a5f; margin-bottom: 30px; }
         
-        /* สรุปตัวเลข */
+        /* Summary Cards */
         .summary-cards { display: flex; justify-content: space-around; margin-bottom: 30px; gap: 20px; }
         .card { flex: 1; padding: 20px; border-radius: 10px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .bg-total { background: #34495e; }
@@ -22,7 +22,7 @@
         th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
         th { background-color: #1a3a5f; color: white; }
         
-        /* สีของสถานะ */
+        /* Status Colors */
         .status-done { background-color: #d4edda; color: #155724; font-weight: bold; border-radius: 5px; padding: 4px 8px; }
         .status-doing { background-color: #fff3cd; color: #856404; font-weight: bold; border-radius: 5px; padding: 4px 8px; }
         .status-pending { background-color: #d1ecf1; color: #0c5460; font-weight: bold; border-radius: 5px; padding: 4px 8px; }
@@ -31,15 +31,15 @@
 <body>
 
 <div class="container">
-    <h1>📊สรุป PS : External truck driver exited the cabin in a prohibited area </h1>
+    <h1>📊 Pedestrian Safety Project Progress Summary</h1>
 
     <div class="summary-cards">
         <div class="card bg-total">
-            <h3>งานทั้งหมด</h3>
+            <h3>Total Actions</h3>
             <h2 id="totalTasks">9</h2>
         </div>
         <div class="card bg-progress">
-            <h3>ความคืบหน้าภาพรวม</h3>
+            <h3>Overall Progress</h3>
             <h2 id="overallPercent">0%</h2>
         </div>
     </div>
@@ -53,15 +53,15 @@
         </div>
     </div>
 
-    <h3>📋 รายละเอียดความคืบหน้า (Action List)</h3>
+    <h3>📋 Action List Details</h3>
     <table id="actionTable">
         <thead>
             <tr>
                 <th>#</th>
-                <th>กิจกรรม (Action)</th>
-                <th>ผู้รับผิดชอบ</th>
-                <th>สถานะ</th>
-                <th>เปอร์เซ็นต์</th>
+                <th>Action Description</th>
+                <th>Person in Charge (PIC)</th>
+                <th>Status</th>
+                <th>Completion (%)</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -69,11 +69,11 @@
 </div>
 
 <script>
-    // ข้อมูลอ้างอิงจากสีในรูปภาพที่คุณส่งมา
+    // Task data updated to English
     const tasks = [
         { id: 1, action: "Review current practices", pic: "Kritsada", status: "Done", percent: 100 },
         { id: 2, action: "Conduct Gemba observation", pic: "Kaittisak", status: "Done", percent: 100 },
-        { id: 3, action: "Identify risk points", pic: "Patipan, Kaittisak", status: "Doing", percent: 50 },
+        { id: 3, action: "Identify risk points", pic: "Patipan, Kaittisak", status: "In Progress", percent: 50 },
         { id: 4, action: "Communicate safety requirements", pic: "Patipan, Kaittisak", status: "Pending", percent: 0 },
         { id: 5, action: "Define designated safe areas", pic: "Kaittisak", status: "Pending", percent: 0 },
         { id: 6, action: "Consider extra security guard", pic: "Weeraphon", status: "Pending", percent: 0 },
@@ -82,16 +82,16 @@
         { id: 9, action: "Install intelligent AI box", pic: "Weeraphon", status: "Pending", percent: 0 }
     ];
 
-    // คำนวณเปอร์เซ็นต์รวม
+    // Calculate Total Progress Percentage
     const totalPercent = (tasks.reduce((sum, item) => sum + item.percent, 0) / (tasks.length * 100) * 100).toFixed(1);
     document.getElementById('overallPercent').innerText = totalPercent + "%";
     document.getElementById('totalTasks').innerText = tasks.length;
 
-    // สร้างตาราง
+    // Populate Table
     const tableBody = document.querySelector('#actionTable tbody');
     tasks.forEach(item => {
-        let statusText = item.status === "Done" ? "ทำแล้ว (เขียว)" : item.status === "Doing" ? "กำลังทำ (เหลือง)" : "ยังไม่ได้ทำ (ฟ้า)";
-        let statusClass = item.status === "Done" ? "status-done" : item.status === "Doing" ? "status-doing" : "status-pending";
+        let statusText = item.status === "Done" ? "Completed" : item.status === "In Progress" ? "In Progress" : "Pending";
+        let statusClass = item.status === "Done" ? "status-done" : item.status === "In Progress" ? "status-doing" : "status-pending";
         
         tableBody.innerHTML += `<tr>
             <td>${item.id}</td>
@@ -102,34 +102,40 @@
         </tr>`;
     });
 
-    // กราฟสรุปสถานะ
-    const statusCounts = { Done: 2, Doing: 1, Pending: 6 };
+    // Chart: Status Distribution
+    const statusCounts = { Done: 2, InProgress: 1, Pending: 6 };
     new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
         data: {
-            labels: ['ทำแล้ว', 'กำลังทำ', 'ยังไม่ได้ทำ'],
+            labels: ['Completed', 'In Progress', 'Pending'],
             datasets: [{
-                data: [statusCounts.Done, statusCounts.Doing, statusCounts.Pending],
+                data: [statusCounts.Done, statusCounts.InProgress, statusCounts.Pending],
                 backgroundColor: ['#28a745', '#ffc107', '#17a2b8']
             }]
         },
-        options: { plugins: { title: { display: true, text: 'สัดส่วนสถานะงานทั้งหมด' } } }
+        options: { 
+            plugins: { 
+                title: { display: true, text: 'Overall Status Distribution' } 
+            } 
+        }
     });
 
-    // กราฟความคืบหน้าแยกตามคน
+    // Chart: Progress by Person in Charge
     new Chart(document.getElementById('progressByPicChart'), {
         type: 'bar',
         data: {
             labels: ['Kritsada', 'Kaittisak', 'Patipan', 'Weeraphon'],
             datasets: [{
-                label: '% ความสำเร็จรายบุคคล (เฉลี่ย)',
-                data: [100, 50, 25, 0], // ค่าประมาณจากงานที่ได้รับมอบหมาย
+                label: 'Avg. Completion %',
+                data: [100, 50, 25, 0], 
                 backgroundColor: '#3498db'
             }]
         },
         options: { 
             scales: { y: { beginAtZero: true, max: 100 } },
-            plugins: { title: { display: true, text: 'Progress % รายบุคคล' } }
+            plugins: { 
+                title: { display: true, text: 'Individual Progress (%)' } 
+            }
         }
     });
 </script>
