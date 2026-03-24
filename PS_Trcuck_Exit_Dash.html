@@ -3,152 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Action Plan - Full 9 Actions</title>
+    <title>Safety Compliance Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .chart-container { position: relative; height: 140px; width: 140px; }
+        .chart-center-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    </style>
 </head>
-<body class="bg-slate-100 font-sans p-4 md:p-8">
+<body class="p-4 md:p-8 min-h-screen">
 
-    <div class="max-w-6xl mx-auto">
-        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center border-b-4 border-indigo-500">
-            <div>
-                <h1 class="text-2xl font-black tracking-tight uppercase">External truck driver exited the cabin in a prohibited area
-</h1>
-                <p class="text-slate-400 text-xs tracking-widest uppercase mt-1">Full 9-Item Execution Tracking</p>
-            </div>
-            <div class="mt-4 md:mt-0 bg-white/10 px-6 py-2 rounded-full border border-white/20">
-                <span class="text-[10px] font-bold text-slate-300 uppercase block leading-none">Overall Progress</span>
-                <span class="text-2xl font-black text-green-400">33.3%</span>
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="bg-slate-900 rounded-[2rem] p-8 mb-8 shadow-2xl border-b-4 border-red-500">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-white mt-1 tracking-tight leading-tight">
+                        PS : External truck driver exited the cabin in a prohibited area
+                    </h1>
+                    <p class="text-slate-400 mt-2 font-medium italic">Corrective & Preventive Action Implementation Tracking</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 text-center min-w-[200px]">
+                    <span class="text-slate-400 text-xs font-bold uppercase block mb-1">Overall Progress</span>
+                    <span class="text-4xl font-black text-green-400">33.3%</span>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-red-500">
-                <div class="flex justify-between mb-2">
-                    <h3 class="text-sm font-black text-slate-700 uppercase">High Priority Performance</h3>
-                    <span class="text-red-600 font-bold text-sm">10% Complete</span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <div class="glass-card p-6 rounded-[2.5rem] shadow-xl flex flex-col items-center">
+                <h3 class="font-black text-slate-500 uppercase tracking-widest mb-4 text-xs">Project Status</h3>
+                <div class="chart-container">
+                    <canvas id="overallChart"></canvas>
+                    <div class="chart-center-text text-center">
+                        <span class="text-xl font-black text-slate-800">3/9</span>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase">Tasks</p>
+                    </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-4 mb-3">
-                    <div class="bg-red-500 h-4 rounded-full transition-all duration-1000" style="width: 10%"></div>
-                </div>
-                <p class="text-[10px] text-slate-400 font-bold uppercase italic tracking-wider">
-                    Calculated from 6 Critical Safety Tasks (Tasks 3, 5, 6, 7, 8, 9)
-                </p>
+                <p class="mt-4 text-[10px] font-black text-green-500 uppercase tracking-tighter">On Schedule</p>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-yellow-500">
-                <div class="flex justify-between mb-2">
-                    <h3 class="text-sm font-black text-slate-700 uppercase">Medium Priority Performance</h3>
-                    <span class="text-yellow-600 font-bold text-sm">80% Complete</span>
+            <div class="glass-card p-6 rounded-[2.5rem] shadow-xl flex flex-col items-center border-t-4 border-red-500">
+                <h3 class="font-black text-red-600 uppercase tracking-widest mb-4 text-xs">High Priority Performance</h3>
+                <div class="chart-container">
+                    <canvas id="highChart"></canvas>
+                    <div class="chart-center-text text-center">
+                        <span class="text-2xl font-black text-red-600">10%</span>
+                    </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-4 mb-3">
-                    <div class="bg-yellow-500 h-4 rounded-full transition-all duration-1000" style="width: 80%"></div>
+                <p class="mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">6 Critical Actions</p>
+            </div>
+
+            <div class="glass-card p-6 rounded-[2.5rem] shadow-xl flex flex-col items-center border-t-4 border-yellow-500">
+                <h3 class="font-black text-yellow-600 uppercase tracking-widest mb-4 text-xs">Medium Priority Performance</h3>
+                <div class="chart-container">
+                    <canvas id="mediumChart"></canvas>
+                    <div class="chart-center-text text-center">
+                        <span class="text-2xl font-black text-yellow-600">80%</span>
+                    </div>
                 </div>
-                <p class="text-[10px] text-slate-400 font-bold uppercase italic tracking-wider">
-                    Calculated from 3 Operational Tasks (Tasks 1, 2, 4)
-                </p>
+                <p class="mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">3 Operational Actions</p>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 p-4 border-b border-slate-200">
-                <h2 class="text-xs font-black text-slate-500 uppercase tracking-widest"><i class="fa-solid fa-list-check mr-2"></i> Action Implementation Status</h2>
+        <div class="bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 p-6 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="font-black text-slate-800 uppercase tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-list text-red-500"></i> Action Plan Execution Details
+                </h2>
+                <div class="flex gap-4 text-[9px] font-black uppercase">
+                    <span class="flex items-center gap-1 text-green-600"><i class="fa-solid fa-circle text-[6px]"></i> Done</span>
+                    <span class="flex items-center gap-1 text-indigo-600"><i class="fa-solid fa-circle text-[6px]"></i> Ongoing</span>
+                    <span class="flex items-center gap-1 text-slate-300"><i class="fa-solid fa-circle text-[6px]"></i> Planned</span>
+                </div>
             </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter border-b border-slate-100">
-                            <th class="p-4">#</th>
-                            <th class="p-4">Action Description</th>
-                            <th class="p-4">Priority</th>
-                            <th class="p-4">PIC</th>
-                            <th class="p-4">Timeline</th>
-                            <th class="p-4 text-right">Progress</th>
+                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] border-b border-slate-100">
+                            <th class="p-6">#</th>
+                            <th class="p-6">Strategic Action Description</th>
+                            <th class="p-6">Priority</th>
+                            <th class="p-6">PIC</th>
+                            <th class="p-6">Timeline</th>
+                            <th class="p-6 text-right">Progress (%)</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm">
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-bold text-slate-300">01</td>
-                            <td class="p-4 font-semibold text-slate-700">Review practices of drivers exiting trucks</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-black rounded uppercase">Medium</span></td>
-                            <td class="p-4 text-xs text-slate-500">Kritsada</td>
-                            <td class="p-4 text-[11px] text-slate-400">Jan</td>
-                            <td class="p-4 text-right font-black text-green-600">100%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-bold text-slate-300">02</td>
-                            <td class="p-4 font-semibold text-slate-700">Gemba observation at gate/yard areas</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-black rounded uppercase">Medium</span></td>
-                            <td class="p-4 text-xs text-slate-500">Kaittisak</td>
-                            <td class="p-4 text-[11px] text-slate-400">Feb</td>
-                            <td class="p-4 text-right font-black text-green-600">100%</td>
-                        </tr>
-                        <tr class="hover:bg-red-50/50 transition bg-red-50/20">
-                            <td class="p-4 font-bold text-red-300">03</td>
-                            <td class="p-4 font-bold text-red-900 underline decoration-red-200">Identify risk points & develop countermeasures</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-black rounded uppercase">High</span></td>
-                            <td class="p-4 text-xs text-slate-500">Patipan, Kaittisak</td>
-                            <td class="p-4 text-[11px] text-red-600 font-bold italic">Mar (Ongoing)</td>
-                            <td class="p-4 text-right font-black text-red-600">60%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-bold text-slate-300">04</td>
-                            <td class="p-4 font-semibold text-slate-700 tracking-tighter">Communicate "Driver Stay in Truck" requirements</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-black rounded uppercase">Medium</span></td>
-                            <td class="p-4 text-xs text-slate-500">Patipan, Kaittisak</td>
-                            <td class="p-4 text-[11px] text-slate-400">Mar-Apr</td>
-                            <td class="p-4 text-right font-black text-yellow-600">40%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition opacity-60">
-                            <td class="p-4 font-bold text-slate-300">05</td>
-                            <td class="p-4 text-slate-500 tracking-tighter">Define safe areas for drivers exiting trucks</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-red-50 text-red-300 text-[9px] font-black rounded uppercase">High</span></td>
-                            <td class="p-4 text-xs text-slate-400">Kaittisak</td>
-                            <td class="p-4 text-[11px] text-slate-400 text-xs">Apr</td>
-                            <td class="p-4 text-right font-black text-slate-300">0%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition opacity-60">
-                            <td class="p-4 font-bold text-slate-300 text-xs">06</td>
-                            <td class="p-4 text-slate-500 tracking-tighter text-xs">Consider extra security guard for control</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-red-50 text-red-300 text-[9px] font-black rounded uppercase text-xs">High</span></td>
-                            <td class="p-4 text-xs text-slate-400 text-xs text-xs">Weeraphon</td>
-                            <td class="p-4 text-[11px] text-slate-400 text-xs text-xs">May</td>
-                            <td class="p-4 text-right font-black text-slate-300 text-xs">0%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition opacity-60">
-                            <td class="p-4 font-bold text-slate-300 text-xs text-xs">07</td>
-                            <td class="p-4 text-slate-500 tracking-tighter text-xs text-xs">Install safety signage in operational areas</td>
-                            <td class="p-4 text-xs text-xs text-xs text-xs"><span class="px-2 py-0.5 bg-red-50 text-red-300 text-[9px] font-black rounded uppercase text-xs">High</span></td>
-                            <td class="p-4 text-xs text-slate-400 text-xs text-xs text-xs">Weeraphon</td>
-                            <td class="p-4 text-[11px] text-slate-400 text-xs text-xs text-xs">May</td>
-                            <td class="p-4 text-right font-black text-slate-300 text-xs text-xs">0%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition opacity-60">
-                            <td class="p-4 font-bold text-slate-300 text-xs text-xs text-xs">08</td>
-                            <td class="p-4 text-slate-500 tracking-tighter text-xs text-xs text-xs">Monitor driver compliance (Long-term)</td>
-                            <td class="p-4 text-xs text-xs text-xs text-xs text-xs text-xs"><span class="px-2 py-0.5 bg-red-50 text-red-300 text-[9px] font-black rounded uppercase text-xs">High</span></td>
-                            <td class="p-4 text-xs text-slate-400 text-xs text-xs text-xs text-xs">Weeraphon</td>
-                            <td class="p-4 text-[11px] text-slate-400 text-xs text-xs text-xs text-xs text-xs text-xs">Jun-Oct</td>
-                            <td class="p-4 text-right font-black text-slate-300 text-xs text-xs text-xs text-xs">0%</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition opacity-60 text-xs text-xs">
-                            <td class="p-4 font-bold text-slate-300 text-xs text-xs text-xs text-xs">09</td>
-                            <td class="p-4 text-slate-500 tracking-tighter text-xs text-xs text-xs text-xs">Study intelligent AI box for monitoring</td>
-                            <td class="p-4 text-xs text-xs text-xs text-xs text-xs text-xs text-xs text-xs"><span class="px-2 py-0.5 bg-red-50 text-red-300 text-[9px] font-black rounded uppercase text-xs">High</span></td>
-                            <td class="p-4 text-xs text-slate-400 text-xs text-xs text-xs text-xs text-xs text-xs text-xs">Weeraphon</td>
-                            <td class="p-4 text-[11px] text-slate-400 text-xs text-xs text-xs text-xs text-xs text-xs text-xs">Nov-Dec</td>
-                            <td class="p-4 text-right font-black text-slate-300 text-xs text-xs text-xs text-xs text-xs">0%</td>
-                        </tr>
+                    <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                        <script>
+                            const tasks = [
+                                { id: '01', desc: 'Review current practices of truck drivers exiting trucks', prio: 'Medium', pic: 'Kritsada', time: 'Jan', prog: 100 },
+                                { id: '02', desc: 'Conduct Gemba observation at gate and yard areas', prio: 'Medium', pic: 'Kaittisak', time: 'Feb', prog: 100 },
+                                { id: '03', desc: 'Identify risk points and develop countermeasures', prio: 'High', pic: 'Patipan, Kaittisak', time: 'Mar', prog: 60 },
+                                { id: '04', desc: 'Communicate "Driver Stay in Truck" requirements', prio: 'Medium', pic: 'Patipan, Kaittisak', time: 'Mar-Apr', prog: 40 },
+                                { id: '05', desc: 'Define designated safe areas for drivers', prio: 'High', pic: 'Kaittisak', time: 'Apr', prog: 0 },
+                                { id: '06', desc: 'Consider extra security guard for control', prio: 'High', pic: 'Weeraphon', time: 'May', prog: 0 },
+                                { id: '07', desc: 'Install safety signage in operational areas', prio: 'High', pic: 'Weeraphon', time: 'May', prog: 0 },
+                                { id: '08', desc: 'Monitor driver compliance (Long-term)', prio: 'High', pic: 'Weeraphon', time: 'Jun-Oct', prog: 0 },
+                                { id: '09', desc: 'Study an intelligent AI box for monitoring', prio: 'High', pic: 'Weeraphon', time: 'Nov-Dec', prog: 0 }
+                            ];
+
+                            document.write(tasks.map(t => `
+                                <tr class="hover:bg-slate-50/80 transition-all">
+                                    <td class="p-6 font-bold text-slate-300 text-xs">${t.id}</td>
+                                    <td class="p-6 font-bold text-slate-800 text-xs">${t.desc}</td>
+                                    <td class="p-6">
+                                        <span class="px-3 py-1 ${t.prio === 'High' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'} text-[9px] font-black rounded-full uppercase">${t.prio}</span>
+                                    </td>
+                                    <td class="p-6 text-xs text-slate-500 font-bold">${t.pic}</td>
+                                    <td class="p-6 text-xs text-slate-400 font-bold">${t.time}</td>
+                                    <td class="p-6 text-right">
+                                        <span class="font-black ${t.prog === 100 ? 'text-green-500' : t.prog > 0 ? 'text-indigo-600' : 'text-slate-300'} text-xs">${t.prog}%</span>
+                                        <div class="w-24 h-1.5 bg-slate-100 rounded-full ml-auto mt-2 overflow-hidden shadow-inner">
+                                            <div class="h-full ${t.prog === 100 ? 'bg-green-500' : 'bg-indigo-600'} transition-all duration-1000" style="width: ${t.prog}%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join(''));
+                        </script>
                     </tbody>
                 </table>
-            </div>
-            <div class="p-3 bg-slate-900 text-white text-[9px] font-black uppercase tracking-[0.2em] flex justify-between">
-                <span>Priority Progress Dashboard</span>
-                <span class="text-indigo-400 italic font-bold text-xs tracking-tighter">Status as of March 2024</span>
             </div>
         </div>
     </div>
 
+    <script>
+        const commonOptions = { cutout: '82%', plugins: { legend: { display: false } }, rotation: -90, circumference: 360 };
+
+        // 1. Overall Circle
+        new Chart(document.getElementById('overallChart'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [33, 67], backgroundColor: ['#6366f1', '#e2e8f0'], borderWidth: 0 }] },
+            options: commonOptions
+        });
+
+        // 2. High Priority Circle
+        new Chart(document.getElementById('highChart'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [10, 90], backgroundColor: ['#ef4444', '#f8fafc'], borderWidth: 0 }] },
+            options: commonOptions
+        });
+
+        // 3. Medium Priority Circle
+        new Chart(document.getElementById('mediumChart'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [80, 20], backgroundColor: ['#eab308', '#f8fafc'], borderWidth: 0 }] },
+            options: commonOptions
+        });
+    </script>
 </body>
 </html>
