@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stowlog Implementation Dashboard 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; margin-bottom: 20px; }
+        .card-header { background-color: #0d6efd; color: white; font-weight: bold; }
+        .chart-container { position: relative; height: 300px; width: 100%; padding: 10px; }
+        .progress-text { font-size: 1.1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container my-4">
+    <h1 class="text-center mb-4">🚢 Stowlog Implementation Master Plan 2026</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title text-center mb-3">Overall Master Plan Progress</h4>
+            <div class="progress" style="height: 35px; border-radius: 20px;">
+                <div id="master-progress-bar" class="progress-bar bg-success progress-bar-striped progress-bar-animated progress-text" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    0%
+                </div>
+            </div>
+            <p class="text-center text-muted mt-2" id="progress-subtext">Calculating tasks...</p>
+        </div>
+    </div>
+
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Issues</h5>
+                    <h2 id="total-issues">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Open Issues</h5>
+                    <h2 id="open-issues">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Closed Issues</h5>
+                    <h2 id="closed-issues">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-dark bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">High Severity</h5>
+                    <h2 id="high-severity">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Issue Status</div>
+                <div class="card-body chart-container">
+                    <canvas id="issueStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Issue Severity</div>
+                <div class="card-body chart-container">
+                    <canvas id="issueSeverityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">External Truck User (Target vs Actual)</div>
+                <div class="card-body chart-container" style="height: 400px;">
+                    <canvas id="truckChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">PC: Total Gate In vs Stowlog</div>
+                <div class="card-body chart-container" style="height: 400px;">
+                    <canvas id="pcChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- Master Plan Progress Data ---
+    const totalTasks = 87;
+    const completedTasks = 44;
+    const progressPercent = ((completedTasks / totalTasks) * 100).toFixed(1);
+
+    // Update Progress Bar UI
+    const progressBar = document.getElementById('master-progress-bar');
+    progressBar.style.width = progressPercent + '%';
+    progressBar.innerText = progressPercent + '%';
+    progressBar.setAttribute('aria-valuenow', progressPercent);
+    document.getElementById('progress-subtext').innerText = `${completedTasks} out of ${totalTasks} Master Plan Tasks Completed`;
+
+    // --- Data Extracted from CSV Files ---
+    const issueStatusData = {"Closed": 19, "Open": 4};
+    const issueSeverityData = {"High": 14, "Medium": 5, "Low": 4};
+    
+    // External Truck Data
+    const extWk = ["WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52", "WK53", "WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11"];
+    const extTarget = [50, 80, 120, 170, 220, 260, 300, 700, 1200, 1700, 2100, 2400, 2500, 2500, 2500, 2500, 2500, 2500, 1200, 1600, 2000, 2500, 3000, 3600];
+    const extActual = [14, 60, 102, 152, 156, 168, 333, 342, 492, 638, 663, 680, 788, 854, 882, 982, 1164, 1190, 1260, 4184, 5029, 6422, 6922, 8400];
+
+    // PC Data
+    const pcWk = ["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11"];
+    const pcGateIn = [1537, 1932, 2303, 2100, 2400, 2378, 2111, 2561, 4137, 2029, 6803];
+    const pcStowlog = [31, 97, 92, 147, 288, 357, 380, 1490, 1841, 927, 2248];
+
+    // Update Summary Cards
+    document.getElementById('total-issues').innerText = issueStatusData.Closed + issueStatusData.Open;
+    document.getElementById('open-issues').innerText = issueStatusData.Open;
+    document.getElementById('closed-issues').innerText = issueStatusData.Closed;
+    document.getElementById('high-severity').innerText = issueSeverityData.High;
+
+    // 1. Issue Status Chart
+    new Chart(document.getElementById('issueStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(issueStatusData),
+            datasets: [{
+                data: Object.values(issueStatusData),
+                backgroundColor: ['#198754', '#dc3545'],
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 2. Issue Severity Chart
+    new Chart(document.getElementById('issueSeverityChart'), {
+        type: 'pie',
+        data: {
+            labels: Object.keys(issueSeverityData),
+            datasets: [{
+                data: Object.values(issueSeverityData),
+                backgroundColor: ['#dc3545', '#ffc107', '#0dcaf0'],
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 3. External Truck User Chart
+    new Chart(document.getElementById('truckChart'), {
+        type: 'bar',
+        data: {
+            labels: extWk,
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'Target (Cumulative)',
+                    data: extTarget,
+                    borderColor: '#0d6efd',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1
+                },
+                {
+                    type: 'bar',
+                    label: 'Actual Achieved',
+                    data: extActual,
+                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                    borderColor: '#198754',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // 4. PC Gate In vs Stowlog Chart
+    new Chart(document.getElementById('pcChart'), {
+        type: 'bar',
+        data: {
+            labels: pcWk,
+            datasets: [
+                {
+                    label: 'Total Gate In',
+                    data: pcGateIn,
+                    backgroundColor: 'rgba(108, 117, 125, 0.7)',
+                },
+                {
+                    label: 'Stowlog Processed',
+                    data: pcStowlog,
+                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
